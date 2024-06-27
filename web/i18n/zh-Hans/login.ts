@@ -24,6 +24,7 @@ const translation = {
   acceptPP: '我已阅读并接受隐私政策',
   reset: '请运行以下命令重置密码',
   withGitHub: '使用 GitHub 登录',
+  withDingtalk: '使用 钉钉 登录',
   withGoogle: '使用 Google 登录',
   rightTitle: '释放大型语言模型的全部潜能',
   rightDesc: '简单构建可视化、可运营、可改进的 AI 应用',
