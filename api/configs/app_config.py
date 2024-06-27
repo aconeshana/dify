@@ -6,6 +6,7 @@ from configs.extra import ExtraServiceConfig
 from configs.feature import FeatureConfig
 from configs.middleware import MiddlewareConfig
 from configs.packaging import PackagingInfo
+from configs.oauth import OauthConfig
 
 
 # TODO: Both `BaseModel` and `BaseSettings` has `model_config` attribute but they are in different types.
@@ -33,6 +34,8 @@ class DifyConfig(
     # Enterprise feature configs
     # **Before using, please contact business@dify.ai by email to inquire about licensing matters.**
     EnterpriseFeatureConfig,
+
+    OauthConfig,
 ):
 
     model_config = SettingsConfigDict(
