@@ -6,6 +6,10 @@
   background: center/contain url('./assets/google.svg');
 }
 
+.dingtalkIcon {
+  background: center/contain url('./assets/dingtalk.svg');
+}
+
 .background {
   background-image: url('./assets/background.png');
   background-size: cover;

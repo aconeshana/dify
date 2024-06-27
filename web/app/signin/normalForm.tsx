@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import Link from 'next/link'
 import Toast from '../components/base/toast'
 import style from './page.module.css'
-import { IS_CE_EDITION, SUPPORT_MAIL_LOGIN, apiPrefix, emailRegex } from '@/config'
+import { IS_CE_EDITION, apiPrefix, emailRegex } from '@/config'
 import Button from '@/app/components/base/button'
 import { login, oauth } from '@/service/common'
 import { getPurifyHref } from '@/utils'
@@ -61,7 +61,8 @@ function reducer(state: IState, action: IAction) {
 
 const NormalForm = () => {
   const { t } = useTranslation()
-  const useEmailLogin = IS_CE_EDITION || SUPPORT_MAIL_LOGIN
+  // const useEmailLogin = IS_CE_EDITION || SUPPORT_MAIL_LOGIN
+  const useEmailLogin = false
 
   const router = useRouter()
 
@@ -142,6 +143,9 @@ const NormalForm = () => {
       window.location.href = google.redirect_url
   }, [google, google_error])
 
+  const dingtalkHost = window.location.origin.includes('localhost') ? 'http%3A%2F%2F127.0.0.1%3A5001' : encodeURIComponent(window.location.origin)
+  const dingtalkLoginUrl = `https://login.dingtalk.com/oauth2/auth?client_id=ding8bgvmmwkqjsydxok&response_type=code&redirect_uri=${dingtalkHost}%2Fconsole%2Fapi%2Foauth%2Fauthorize%2Fdingtalk&scope=openid&prompt=consent`
+
   return (
     <>
       <div className="w-full mx-auto">
@@ -153,6 +157,24 @@ const NormalForm = () => {
         <div className="bg-white ">
           {!useEmailLogin && (
             <div className="flex flex-col gap-3 mt-6">
+              <div className='w-full'>
+                <a href={dingtalkLoginUrl}>
+                  <Button
+                    disabled={isLoading}
+                    className='w-full hover:!bg-gray-50'
+                  >
+                    <>
+                      <span className={
+                        classNames(
+                          style.dingtalkIcon,
+                          'w-5 h-5 mr-2',
+                        )
+                      } />
+                      <span className="truncate text-gray-800">{t('login.withDingtalk')}</span>
+                    </>
+                  </Button>
+                </a>
+              </div>
               <div className='w-full'>
                 <a href={getPurifyHref(`${apiPrefix}/oauth/login/github`)}>
                   <Button
