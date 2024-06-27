@@ -10,7 +10,7 @@ from configs import dify_config
 from constants.languages import languages
 from extensions.ext_database import db
 from libs.helper import get_remote_ip
-from libs.oauth import GitHubOAuth, GoogleOAuth, OAuthUserInfo
+from libs.oauth import GitHubOAuth, GoogleOAuth, DingtalkOAuth, OAuthUserInfo
 from models.account import Account, AccountStatus
 from services.account_service import AccountService, RegisterService, TenantService
 
@@ -36,7 +36,22 @@ def get_oauth_providers():
                 redirect_uri=dify_config.CONSOLE_API_URL + '/console/api/oauth/authorize/google',
             )
 
-        OAUTH_PROVIDERS = {'github': github_oauth, 'google': google_oauth}
+        google_oauth = GoogleOAuth(client_id=current_app.config.get('GOOGLE_CLIENT_ID'),
+                                   client_secret=current_app.config.get(
+                                       'GOOGLE_CLIENT_SECRET'),
+                                   redirect_uri=current_app.config.get(
+                                       'CONSOLE_API_URL') + '/console/api/oauth/authorize/google')
+        dingtalk_oauth = DingtalkOAuth(client_id=current_app.config.get('DINGTALK_APP_KEY'),
+                                       client_secret=current_app.config.get(
+                                           'DINGTALK_APP_SECRET'),
+                                       redirect_uri=current_app.config.get(
+                                           'CONSOLE_API_URL') + '/console/api/oauth/authorize/dingtalk')
+
+        OAUTH_PROVIDERS = {
+            'github': github_oauth,
+            'google': google_oauth,
+            'dingtalk': dingtalk_oauth,
+        }
         return OAUTH_PROVIDERS
 
 

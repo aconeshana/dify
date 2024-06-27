@@ -1,3 +1,4 @@
+import json
 import urllib.parse
 from dataclasses import dataclass
 
@@ -134,5 +135,59 @@ class GoogleOAuth(OAuth):
             name=None,
             email=raw_info['email']
         )
+
+
+class DingtalkOAuth(OAuth):
+    # https://open.dingtalk.com/document/orgapp/scan-qr-code-to-log-on-to-third-party-websites#title-z3q-ijy-dxz
+    # _AUTH_URL = 'https://oapi.dingtalk.com/connect/oauth2/sns_authorize'
+    # https://open.dingtalk.com/document/orgapp/tutorial-obtaining-user-personal-information#title-ts9-exq-xrh
+    _AUTH_URL = 'https://login.dingtalk.com/oauth2/auth'
+    _TOKEN_URL = 'https://api.dingtalk.com/v1.0/oauth2/userAccessToken'
+    _USER_INFO_URL = 'https://api.dingtalk.com/v1.0/contact/users/me'
+
+    def get_authorization_url(self):
+        # appid=SuiteKey&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=REDIRECT_URI
+        params = {
+            'client_id': self.client_id,
+            'response_type': 'code',
+            'redirect_uri': self.redirect_uri,
+            'scope': 'openid',
+            'prompt': 'consent'
+        }
+        return f"{self._AUTH_URL}?{urllib.parse.urlencode(params)}"
+
+    def get_access_token(self, code: str):
+        data = json.dumps({
+            'clientId': self.client_id,
+            'clientSecret': self.client_secret,
+            'code': code,
+            'grantType': 'authorization_code',
+        })
+        headers = {'Content-Type': 'application/json'}
+        response = requests.request("POST", self._TOKEN_URL, data=data, headers=headers)
+
+        response_json = response.json()
+        access_token = response_json.get('accessToken')
+
+        if not access_token:
+            raise ValueError(f"Error in Google OAuth: {response_json}")
+
+        return access_token
+
+    def get_raw_user_info(self, token: str):
+        headers = {'x-acs-dingtalk-access-token': token}
+        response = requests.get(self._USER_INFO_URL, headers=headers)
+
+        response_json = response.json()
+
+        return response_json
+
+    def _transform_user_info(self, raw_info: dict) -> OAuthUserInfo:
+        return OAuthUserInfo(
+            id=str(raw_info['openId']),
+            name=raw_info['nick'],
+            email=raw_info['email']
+        )
+
 
 
