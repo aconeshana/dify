@@ -7,10 +7,9 @@ import useSWR from 'swr'
 import Link from 'next/link'
 import Toast from '../components/base/toast'
 import style from './page.module.css'
-import { IS_CE_EDITION, apiPrefix, emailRegex } from '@/config'
+import { IS_CE_EDITION, emailRegex } from '@/config'
 import Button from '@/app/components/base/button'
 import { login, oauth } from '@/service/common'
-import { getPurifyHref } from '@/utils'
 
 type IState = {
   formValid: boolean
@@ -175,7 +174,7 @@ const NormalForm = () => {
                   </Button>
                 </a>
               </div>
-              <div className='w-full'>
+              {/* <div className='w-full'>
                 <a href={getPurifyHref(`${apiPrefix}/oauth/login/github`)}>
                   <Button
                     disabled={isLoading}
@@ -210,7 +209,7 @@ const NormalForm = () => {
                     </>
                   </Button>
                 </a>
-              </div>
+              </div> */}
             </div>
           )}
 
