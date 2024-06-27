@@ -161,4 +161,4 @@ sdks/python-client/dify_client.egg-info
 !.vscode/launch.json
 pyrightconfig.json
 
-.hitsory
+.history
