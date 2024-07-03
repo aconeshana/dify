@@ -9,6 +9,9 @@ from configs.packaging import PackagingInfo
 from configs.oauth import OauthConfig
 
 
+# TODO: Both `BaseModel` and `BaseSettings` has `model_config` attribute but they are in different types.
+# This inheritance is depends on the order of the classes.
+# It is better to use `BaseSettings` as the base class.
 class DifyConfig(
     # based on pydantic-settings
     BaseSettings,
@@ -39,7 +42,6 @@ class DifyConfig(
         # read from dotenv format config file
         env_file='.env',
         env_file_encoding='utf-8',
-        env_ignore_empty=True,
 
         # ignore extra attributes
         extra='ignore',
